@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using TunaPiano;
 
@@ -28,6 +29,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
+app.MapGet("/api/songs", async (TunaPianoDbContext dbContext) =>
+{
+    var songsWithGenre = await dbContext.Songs.Include("Genres").ToListAsync();
+
+    return Results.Ok(songsWithGenre);
+});
 
 
 app.Run();

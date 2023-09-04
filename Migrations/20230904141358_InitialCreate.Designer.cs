@@ -12,7 +12,7 @@ using TunaPiano;
 namespace TunaPiano.Migrations
 {
     [DbContext(typeof(TunaPianoDbContext))]
-    [Migration("20230903232957_InitialCreate")]
+    [Migration("20230904141358_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,21 @@ namespace TunaPiano.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("GenreSong", b =>
+                {
+                    b.Property<int>("GenresId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SongsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("GenresId", "SongsId");
+
+                    b.HasIndex("SongsId");
+
+                    b.ToTable("SongGenre", (string)null);
+                });
 
             modelBuilder.Entity("TunaPiano.Models.Artist", b =>
                 {
@@ -140,65 +155,19 @@ namespace TunaPiano.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TunaPiano.Models.Song_Genre", b =>
+            modelBuilder.Entity("GenreSong", b =>
                 {
-                    b.Property<int>("SongId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("GenreId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("SongId", "GenreId");
-
-                    b.HasIndex("GenreId");
-
-                    b.ToTable("Song_Genres");
-
-                    b.HasData(
-                        new
-                        {
-                            SongId = 1,
-                            GenreId = 1
-                        },
-                        new
-                        {
-                            SongId = 2,
-                            GenreId = 2
-                        },
-                        new
-                        {
-                            SongId = 2,
-                            GenreId = 3
-                        });
-                });
-
-            modelBuilder.Entity("TunaPiano.Models.Song_Genre", b =>
-                {
-                    b.HasOne("TunaPiano.Models.Genre", "Genre")
-                        .WithMany("Song_Genres")
-                        .HasForeignKey("GenreId")
+                    b.HasOne("TunaPiano.Models.Genre", null)
+                        .WithMany()
+                        .HasForeignKey("GenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TunaPiano.Models.Song", "Song")
-                        .WithMany("Song_Genres")
-                        .HasForeignKey("SongId")
+                    b.HasOne("TunaPiano.Models.Song", null)
+                        .WithMany()
+                        .HasForeignKey("SongsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Genre");
-
-                    b.Navigation("Song");
-                });
-
-            modelBuilder.Entity("TunaPiano.Models.Genre", b =>
-                {
-                    b.Navigation("Song_Genres");
-                });
-
-            modelBuilder.Entity("TunaPiano.Models.Song", b =>
-                {
-                    b.Navigation("Song_Genres");
                 });
 #pragma warning restore 612, 618
         }

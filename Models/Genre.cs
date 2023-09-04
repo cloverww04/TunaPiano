@@ -8,6 +8,6 @@ namespace TunaPiano.Models
         public int Id { get; set; }
         [MaxLength(20)]
         public string? Description { get; set; }
-        public List<Song_Genre>? Song_Genres { get; set; }
+        public ICollection<Song>? Songs { get; set; }
     }
 }

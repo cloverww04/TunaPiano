@@ -55,24 +55,24 @@ namespace TunaPiano.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Song_Genres",
+                name: "SongGenre",
                 columns: table => new
                 {
-                    SongId = table.Column<int>(type: "integer", nullable: false),
-                    GenreId = table.Column<int>(type: "integer", nullable: false)
+                    GenresId = table.Column<int>(type: "integer", nullable: false),
+                    SongsId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Song_Genres", x => new { x.SongId, x.GenreId });
+                    table.PrimaryKey("PK_SongGenre", x => new { x.GenresId, x.SongsId });
                     table.ForeignKey(
-                        name: "FK_Song_Genres_Genres_GenreId",
-                        column: x => x.GenreId,
+                        name: "FK_SongGenre_Genres_GenresId",
+                        column: x => x.GenresId,
                         principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Song_Genres_Songs_SongId",
-                        column: x => x.SongId,
+                        name: "FK_SongGenre_Songs_SongsId",
+                        column: x => x.SongsId,
                         principalTable: "Songs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -106,20 +106,10 @@ namespace TunaPiano.Migrations
                     { 2, "Gregory Alan Isakov With the Colorado Symphony", 2, new TimeSpan(0, 0, 5, 16, 0), "Liars" }
                 });
 
-            migrationBuilder.InsertData(
-                table: "Song_Genres",
-                columns: new[] { "GenreId", "SongId" },
-                values: new object[,]
-                {
-                    { 1, 1 },
-                    { 2, 2 },
-                    { 3, 2 }
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_Song_Genres_GenreId",
-                table: "Song_Genres",
-                column: "GenreId");
+                name: "IX_SongGenre_SongsId",
+                table: "SongGenre",
+                column: "SongsId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -128,7 +118,7 @@ namespace TunaPiano.Migrations
                 name: "Artists");
 
             migrationBuilder.DropTable(
-                name: "Song_Genres");
+                name: "SongGenre");
 
             migrationBuilder.DropTable(
                 name: "Genres");

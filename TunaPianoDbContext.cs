@@ -8,25 +8,16 @@ namespace TunaPiano
         public DbSet<Artist>? Artists { get; set; }
         public DbSet<Genre>? Genres { get; set; }
         public DbSet<Song>? Songs { get; set; }
-        public DbSet<Song_Genre>? Song_Genres { get; set; }
 
         public TunaPianoDbContext(DbContextOptions<TunaPianoDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Song_Genre>()
-                .HasKey(sg => new { sg.SongId, sg.GenreId });
-
-            modelBuilder.Entity<Song_Genre>()
-                .HasOne(sg => sg.Song)
-                .WithMany(s => s.Song_Genres)
-                .HasForeignKey(sg => sg.SongId);
-
-            modelBuilder.Entity<Song_Genre>()
-                .HasOne(sg => sg.Genre)
-                .WithMany(g => g.Song_Genres)
-                .HasForeignKey(sg => sg.GenreId);
+            modelBuilder.Entity<Song>()
+                .HasMany(g => g.Genres)
+                .WithMany(s => s.Songs)
+                .UsingEntity(sg => sg.ToTable("SongGenre"));
 
 
 
@@ -52,13 +43,6 @@ namespace TunaPiano
                 new Genre { Id = 3, Description = "Folk"}
             });
 
-            modelBuilder.Entity<Song_Genre>().HasData(new Song_Genre[]
-            {
-                new Song_Genre { SongId = 1, GenreId = 1 },
-                new Song_Genre { SongId = 2, GenreId = 2 },
-                new Song_Genre { SongId = 2, GenreId = 3 },
-
-            });
 
         }
     }
