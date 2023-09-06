@@ -198,7 +198,16 @@ app.MapPut("/api/artist/{id}", (int id, TunaPianoDbContext dbContext, Artist art
 
 });
 
+app.MapGet("/api/genres", async (TunaPianoDbContext dbContext) =>
+{
+    var genres = await dbContext.Genres.ToListAsync();
+    if (genres == null)
+    {
+        return Results.NotFound();
+    }
 
+    return Results.Ok(genres);
+});
 
 
 app.Run();
