@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -47,11 +46,17 @@ namespace TunaPiano.Migrations
                     Title = table.Column<string>(type: "text", nullable: true),
                     ArtistId = table.Column<int>(type: "integer", nullable: false),
                     Album = table.Column<string>(type: "text", nullable: true),
-                    Length = table.Column<TimeSpan>(type: "interval", nullable: false)
+                    Length = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Songs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Songs_Artists_ArtistId",
+                        column: x => x.ArtistId,
+                        principalTable: "Artists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,21 +107,23 @@ namespace TunaPiano.Migrations
                 columns: new[] { "Id", "Album", "ArtistId", "Length", "Title" },
                 values: new object[,]
                 {
-                    { 1, "Before These Crowded Streets", 1, new TimeSpan(0, 0, 9, 59, 0), "Last Stop" },
-                    { 2, "Gregory Alan Isakov With the Colorado Symphony", 2, new TimeSpan(0, 0, 5, 16, 0), "Liars" }
+                    { 1, "Before These Crowded Streets", 1, "9:59", "Last Stop" },
+                    { 2, "Gregory Alan Isakov With the Colorado Symphony", 2, "5:16", "Liars" }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_SongGenre_SongsId",
                 table: "SongGenre",
                 column: "SongsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Songs_ArtistId",
+                table: "Songs",
+                column: "ArtistId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Artists");
-
             migrationBuilder.DropTable(
                 name: "SongGenre");
 
@@ -125,6 +132,9 @@ namespace TunaPiano.Migrations
 
             migrationBuilder.DropTable(
                 name: "Songs");
+
+            migrationBuilder.DropTable(
+                name: "Artists");
         }
     }
 }

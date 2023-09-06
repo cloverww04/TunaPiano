@@ -21,6 +21,8 @@ namespace TunaPiano
 
 
 
+
+
             modelBuilder.Entity<Artist>().HasData(new Artist[]
             {
                 new Artist { Id = 1, Name = "Dave Matthews", Age = 56, Bio = "David John Matthews (born January 9, 1967) is an American musician, " +
@@ -32,8 +34,8 @@ namespace TunaPiano
 
             modelBuilder.Entity<Song>().HasData(new Song[]
             {
-                new Song { Id = 1, Title = "Last Stop", Album = "Before These Crowded Streets", ArtistId = 1, Length = new TimeSpan(0, 9, 59) },
-                new Song{ Id = 2, Title = "Liars", Album = "Gregory Alan Isakov With the Colorado Symphony", ArtistId =2, Length = new TimeSpan(0, 5, 16)}
+                new Song { Id = 1, Title = "Last Stop", Album = "Before These Crowded Streets", ArtistId = 1, Length = "9:59" },
+                new Song{ Id = 2, Title = "Liars", Album = "Gregory Alan Isakov With the Colorado Symphony", ArtistId =2, Length = "5:16"}
             });
 
             modelBuilder.Entity<Genre>().HasData(new Genre[]
