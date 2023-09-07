@@ -209,6 +209,22 @@ app.MapGet("/api/genres", async (TunaPianoDbContext dbContext) =>
     return Results.Ok(genres);
 });
 
+app.MapDelete("/api/genres/{id}", (int id, TunaPianoDbContext dbContext) =>
+{
+    var genreToDelete = dbContext.Genres.Find(id);
+
+    if (genreToDelete == null)
+    {
+        return Results.NotFound();
+    }
+
+    dbContext.Genres.Remove(genreToDelete);
+    dbContext.SaveChanges();
+
+    return Results.NoContent();
+
+});
+
 
 app.Run();
 
