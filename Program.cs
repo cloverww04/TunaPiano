@@ -209,6 +209,21 @@ app.MapGet("/api/genres", async (TunaPianoDbContext dbContext) =>
     return Results.Ok(genres);
 });
 
+app.MapGet("/api/genres/{id}", async (int id, TunaPianoDbContext dbContext) =>
+{
+    var genres = await dbContext.Genres
+   .Include(g => g.Songs)
+   .ThenInclude(g => g.Artist)
+   .FirstOrDefaultAsync(g => g.Id == id);
+
+    if (genres == null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(genres);
+});
+
 app.MapDelete("/api/genres/{id}", (int id, TunaPianoDbContext dbContext) =>
 {
     var genreToDelete = dbContext.Genres.Find(id);
@@ -222,6 +237,42 @@ app.MapDelete("/api/genres/{id}", (int id, TunaPianoDbContext dbContext) =>
     dbContext.SaveChanges();
 
     return Results.NoContent();
+
+});
+
+app.MapPost("/api/genre", (TunaPianoDbContext dbContext, Genre genre) =>
+{
+    try
+    {
+
+        dbContext.Add(genre);
+        dbContext.SaveChanges();
+        return Results.Created($"/api/artist/{genre.Id}", genre);
+
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex);
+    }
+
+});
+
+app.MapPut("/api/genres/{id}", (int id, TunaPianoDbContext dbContext, Genre genres) =>
+{
+
+    var genreToUpdate = dbContext.Genres.Find(id);
+
+    if (genreToUpdate == null)
+    {
+        return Results.NotFound();
+    }
+
+
+    genreToUpdate.Description = genres.Description;
+
+    dbContext.SaveChanges();
+
+    return Results.Ok(genreToUpdate);
 
 });
 
